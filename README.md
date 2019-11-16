@@ -1,29 +1,31 @@
-# ui-spa
+# COS-243 - Full-Stack Sample
 
-## Project setup
-```
-yarn install
-```
+Full-stack sample application, including:
+* Vue UI
+* Hapi RESTful API
+* Objection/Knex data access layer
+* PostgreSQL database
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+## Install Node packages
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+1. From the command line, run `yarn`
 
-### Run your tests
-```
-yarn run test
-```
+## Set Up Database
 
-### Lints and fixes files
-```
-yarn run lint
-```
+1. Update the Knex configuration in `hapi-server.js`
+   with your database credentials.
+2. Create the database tables by executing `models/schema.sql`
+   (e.g., from a DataGrip console or the `psql` command line client).
+3. Load sample data into the database by executing `models/test-fixture.sql`
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Run Server
+
+1. From a command prompt, execute `yarn api-watch`.
+   This should start up the server.
+   
+## Run UI
+
+1. From a different command prompt, execute `yarn ui-watch`.
+   This should start the Vue development server.
+2. Open your browser to one of the URLs 
+   output by the Vue development server
