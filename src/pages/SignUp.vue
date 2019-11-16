@@ -41,7 +41,7 @@
       <div class="text-xs-center">
         <v-dialog v-model="dialogVisible" width="500">
           <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title>
+            <v-card-title primary-title>
               {{ dialogHeader }}
             </v-card-title>
 
@@ -64,7 +64,6 @@
 
 <script>
 import Instructions from "../components/Instructions.vue";
-import axios from "axios";
 
 export default {
   name: "SignUpPage",
@@ -75,13 +74,16 @@ export default {
     return {
       valid: false, // Are all the fields in the form valid?
 
+      // Object to collect account data
       newMember: {
-        // Object to collect together account data
         firstName: "",
         lastName: "",
         email: "",
         password: ""
       },
+
+      // Was an account created successfully?
+      accountCreated: false,
 
       // Data to be displayed by the dialog.
       dialogHeader: "<no dialogHeader>",
@@ -109,8 +111,11 @@ export default {
   methods: {
     // Invoked when the user clicks the 'Sign Up' button.
     handleSubmit: function() {
+      // Haven't been successful yet.
+      this.accountCreated = false;
+
       // Post the content of the form to the Hapi server.
-      axios
+      this.$axios
         .post("/accounts", {
           firstName: this.newMember.firstName,
           lastName: this.newMember.lastName,
@@ -123,6 +128,7 @@ export default {
           if (result.status === 200) {
             if (result.data.ok) {
               this.showDialog("Success", result.data.msge);
+              this.accountCreated = true;
             } else {
               this.showDialog("Sorry", result.data.msge);
             }
@@ -130,17 +136,22 @@ export default {
         })
         .catch(err => this.showDialog("Failed", err));
     },
+
     // Helper method to display the dialog box with the appropriate content.
     showDialog: function(header, text) {
       this.dialogHeader = header;
       this.dialogText = text;
       this.dialogVisible = true;
     },
+
     // Invoked by the "Okay" button on the dialog; dismiss the dialog
     // and navigate to the home page.
     hideDialog: function() {
       this.dialogVisible = false;
-      this.$router.push({ name: "home-page" });
+      if (this.accountCreated) {
+        // Only navigate away from the sign-up page if we were successful.
+        this.$router.push({ name: "accounts" });
+      }
     }
   }
 };

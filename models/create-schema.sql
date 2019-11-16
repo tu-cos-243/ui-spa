@@ -5,9 +5,10 @@ create table account
     id        serial  not null
         constraint account_pk
             primary key,
-    firstName varchar not null,
-    lastName  varchar not null,
-    email     varchar not null
+    first_name varchar not null,
+    last_name  varchar not null,
+    email     varchar not null,
+    password  varchar not null
 );
 
 comment on table account is 'User Account';

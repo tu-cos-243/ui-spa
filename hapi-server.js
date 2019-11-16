@@ -25,9 +25,7 @@ const server = Hapi.server({
   host: "localhost",
   port: 3000,
   routes: {
-    files: {
-      relativeTo: Path.join(__dirname, "dist")
-    }
+    cors: true
   }
 });
 
@@ -65,24 +63,24 @@ async function init() {
         }
       },
       handler: async (request, h) => {
-        let resultSet = await knex("accounts")
-          .select()
-          .where("email", request.payload.email);
-        if (resultSet.length > 0) {
+        const existingAccount = await Account.query()
+          .where("email", request.payload.email)
+          .first();
+        if (existingAccount) {
           return {
             ok: false,
-            msge: `The account '${request.payload.email}' is already in use`
+            msge: `Account with email '${request.payload.email}' is already in use`
           };
         }
 
-        let result = await knex("accounts").insert({
-          firstname: request.payload.firstName,
-          lastname: request.payload.lastName,
+        const newAccount = await Account.query().insert({
+          first_name: request.payload.firstName,
+          last_name: request.payload.lastName,
           email: request.payload.email,
           password: request.payload.password
         });
 
-        if (result.rowCount === 1) {
+        if (newAccount) {
           return {
             ok: true,
             msge: `Created account '${request.payload.email}'`
@@ -90,7 +88,7 @@ async function init() {
         } else {
           return {
             ok: false,
-            msge: `Couldn't add '${request.payload.email}' to the database`
+            msge: `Couldn't create account with email '${request.payload.email}'`
           };
         }
       }
@@ -102,23 +100,33 @@ async function init() {
       config: {
         description: "Retrieve all accounts"
       },
-      handler: async (request, h) => {
+      handler: (request, h) => {
         return Account.query();
       }
     },
 
     {
-      method: "GET",
-      path: "/public/{param*}",
+      method: "DELETE",
+      path: "/accounts/{id}",
       config: {
-        description: "Static files"
+        description: "Delete an account"
       },
-      handler: {
-        directory: {
-          path: ".",
-          redirectToSlash: true,
-          index: true
-        }
+      handler: (request, h) => {
+        return Account.query()
+          .deleteById(request.params.id)
+          .then(rowsDeleted => {
+            if (rowsDeleted === 1) {
+              return {
+                ok: true,
+                msge: `Deleted account with ID '${request.params.id}'`
+              };
+            } else {
+              return {
+                ok: false,
+                msge: `Couldn't delete account with ID '${request.params.id}'`
+              };
+            }
+          });
       }
     }
   ]);
