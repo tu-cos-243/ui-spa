@@ -1,11 +1,10 @@
-// Standard Node modules
-const Path = require("path");
-
 // Knex
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: "localhost",
+    host: "faraday.cse.taylor.edu",
+    user: "tnurkkala",
+    password: "nerds4christ",
     database: "ui-spa"
   }
 });

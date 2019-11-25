@@ -25,7 +25,7 @@ Full-stack sample application, including:
    
 ## Run UI
 
-1. From a different command prompt, execute `yarn ui-watch`.
+1. From a _different_ command prompt, execute `yarn ui-watch`.
    This should start the Vue development server.
 2. Open your browser to one of the URLs 
    output by the Vue development server

@@ -12,6 +12,3 @@ create table account
 );
 
 comment on table account is 'User Account';
-
-alter table account
-    owner to tom;
