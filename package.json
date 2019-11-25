@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "ui-watch": "vue-cli-service serve",
-    "api-watch": "nodemon hapi-server.js",
+    "api-watch": "nodemon --ignore ./node_modules hapi-server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
