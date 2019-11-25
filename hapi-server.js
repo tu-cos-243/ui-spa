@@ -2,10 +2,10 @@
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: "faraday.cse.taylor.edu",
-    user: "tnurkkala",
-    password: "nerds4christ",
-    database: "ui-spa"
+    host: "faraday.cse.taylor.edu", // PostgreSQL server
+    user: "", // Your user name
+    password: "", // Your password
+    database: "" // Your database name
   }
 });
 
