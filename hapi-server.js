@@ -2,10 +2,10 @@
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: "faraday.cse.taylor.edu", // PostgreSQL server
-    user: "", // Your user name
+    host: "localhost", // PostgreSQL server
+    user: "tom", // Your user name
     password: "", // Your password
-    database: "" // Your database name
+    database: "cos-243-ui-spa" // Your database name
   }
 });
 
@@ -126,6 +126,46 @@ async function init() {
               };
             }
           });
+      }
+    },
+
+    {
+      method: "POST",
+      path: "/login",
+      config: {
+        description: "Log in",
+        validate: {
+          payload: Joi.object({
+            email: Joi.string()
+              .email()
+              .required(),
+            password: Joi.string()
+              .min(8)
+              .required()
+          })
+        }
+      },
+      handler: async (request, h) => {
+        const account = await Account.query()
+          .where("email", request.payload.email)
+          .first();
+        if (account.password === request.payload.password) {
+          console.log("ACCOUNT", account);
+          return {
+            ok: true,
+            msge: `Logged in successfully as '${request.payload.email}'`,
+            details: {
+              firstName: account.first_name,
+              lastName: account.last_name,
+              email: account.email
+            }
+          };
+        } else {
+          return {
+            ok: false,
+            msge: `Invalid email or password`
+          };
+        }
       }
     }
   ]);

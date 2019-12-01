@@ -1,32 +1,76 @@
 <template>
   <v-container>
-    <div>
-      <p>{{ currentUser }}</p>
-      <p>[Sign-in stuff goes here]</p>
-      <v-btn v-on:click="fakeSignIn">Fake Sign In</v-btn>
-      <v-btn v-on:click="fakeSignOut">Fake Sign Out</v-btn>
-    </div>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card class="elevation-12">
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>Log in</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-form>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                name="email"
+                prepend-icon="mdi-email"
+                type="text"
+              />
+              <v-text-field
+                v-model="password"
+                id="password"
+                label="Password"
+                name="password"
+                prepend-icon="mdi-lock"
+                type="password"
+              />
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="logIn" color="primary">Log In</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-snackbar v-model="snackbar.show">
+      {{ snackbar.msge }}
+      <v-btn text color="primary" @click="snackbar.show = false">Close</v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: "SignIn",
-  methods: {
-    fakeSignIn: function() {
-      this.$root.currentUser = "A User";
-    },
-    fakeSignOut: function() {
-      this.$root.currentUser = null;
-    }
-  },
-  computed: {
-    currentUser: function() {
-      if (this.$root.currentUser) {
-        return this.$root.currentUser;
-      } else {
-        return "No one logged in";
+  data() {
+    return {
+      email: "",
+      password: "",
+
+      snackbar: {
+        show: false,
+        msge: ""
       }
+    };
+  },
+
+  methods: {
+    logIn() {
+      this.$axios
+        .post("/login", {
+          email: this.email,
+          password: this.password
+        })
+        .then(result => {
+          console.log(result);
+          this.showSnackbar(result.data.msge);
+        })
+        .catch(err => this.showSnackbar(err));
+    },
+
+    showSnackbar(msge) {
+      this.snackbar.msge = msge;
+      this.snackbar.show = true;
     }
   }
 };

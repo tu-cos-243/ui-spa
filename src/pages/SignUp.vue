@@ -98,7 +98,9 @@ export default {
       // containing an error message indicating why the field doesn't pass validation.
       rules: {
         required: [val => val.length > 0 || "Required"],
-        email: [val => /^\w+@\w+\.\w{2,}$/.test(val) || "Invalid e-mail"],
+        email: [
+          val => /\w{3,}@\w{3,}(?:.\w{3,})+$/.test(val) || "Invalid e-mail"
+        ],
         password: [
           val => /[A-Z]/.test(val) || "Need upper case letter",
           val => /[a-z]/.test(val) || "Need lower case letter",
@@ -125,13 +127,11 @@ export default {
         .then(result => {
           // Based on whether things worked or not, show the
           // appropriate dialog.
-          if (result.status === 200) {
-            if (result.data.ok) {
-              this.showDialog("Success", result.data.msge);
-              this.accountCreated = true;
-            } else {
-              this.showDialog("Sorry", result.data.msge);
-            }
+          if (result.data.ok) {
+            this.showDialog("Success", result.data.msge);
+            this.accountCreated = true;
+          } else {
+            this.showDialog("Sorry", result.data.msge);
           }
         })
         .catch(err => this.showDialog("Failed", err));
