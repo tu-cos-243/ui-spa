@@ -150,7 +150,6 @@ async function init() {
           .where("email", request.payload.email)
           .first();
         if (account.password === request.payload.password) {
-          console.log("ACCOUNT", account);
           return {
             ok: true,
             msge: `Logged in successfully as '${request.payload.email}'`,

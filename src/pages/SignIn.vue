@@ -62,8 +62,11 @@ export default {
           password: this.password
         })
         .then(result => {
-          console.log(result);
           this.showSnackbar(result.data.msge);
+          if (result.data.ok) {
+            this.$store.commit("logIn", result.data.details);
+            this.$router.push({ name: "home-page" });
+          }
         })
         .catch(err => this.showSnackbar(err));
     },
