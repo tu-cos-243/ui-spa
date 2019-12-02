@@ -150,7 +150,7 @@ export default {
       this.dialogVisible = false;
       if (this.accountCreated) {
         // Only navigate away from the sign-up page if we were successful.
-        this.$router.push({ name: "accounts" });
+        this.$router.push({ name: "home-page" });
       }
     }
   }

@@ -51,7 +51,9 @@ export default {
   methods: {
     signOut() {
       this.$store.commit("logOut");
-      this.$router.push({ name: "home-page" });
+      if (this.$router.currentRoute.name != "home-page") {
+        this.$router.push({ name: "home-page" });
+      }
     }
   }
 };

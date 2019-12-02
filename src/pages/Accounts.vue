@@ -8,13 +8,20 @@
         v-bind:headers="headers"
         v-bind:items="accounts"
       >
-        <template v-slot:item.action="{ item }">
-          <v-icon small @click="deleteAccount(item)">
-            mdi-delete
-          </v-icon>
-          <v-icon small class="ml-2" @click="updateAccount(item)">
-            mdi-pencil
-          </v-icon>
+        <template v-slot:item="{ item }">
+          <tr v-bind:class="itemClass(item)">
+            <td>{{ item.email }}</td>
+            <td>{{ item.firstName }}</td>
+            <td>{{ item.lastName }}</td>
+            <td>
+              <v-icon small @click="deleteAccount(item)">
+                mdi-delete
+              </v-icon>
+              <v-icon small class="ml-2" @click="updateAccount(item)">
+                mdi-pencil
+              </v-icon>
+            </td>
+          </tr>
         </template>
       </v-data-table>
 
@@ -67,6 +74,14 @@ export default {
       this.snackbar.show = true;
     },
 
+    // Calculate the CSS class for an item
+    itemClass(item) {
+      const currentAccount = this.$store.state.currentAccount;
+      if (currentAccount && currentAccount.id === item.id) {
+        return "currentAccount";
+      }
+    },
+
     // Update account information.
     updateAccount(item) {
       console.log("UPDATE", JSON.stringify(item, null, 2));
@@ -88,3 +103,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.currentAccount {
+  background: teal;
+}
+</style>

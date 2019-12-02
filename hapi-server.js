@@ -149,11 +149,15 @@ async function init() {
         const account = await Account.query()
           .where("email", request.payload.email)
           .first();
-        if (account.password === request.payload.password) {
+        if (
+          account &&
+          (await account.verifyPassword(request.payload.password))
+        ) {
           return {
             ok: true,
             msge: `Logged in successfully as '${request.payload.email}'`,
             details: {
+              id: account.id,
               firstName: account.first_name,
               lastName: account.last_name,
               email: account.email
@@ -162,7 +166,7 @@ async function init() {
         } else {
           return {
             ok: false,
-            msge: `Invalid email or password`
+            msge: "Invalid email or password"
           };
         }
       }
