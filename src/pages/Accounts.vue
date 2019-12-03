@@ -106,6 +106,6 @@ export default {
 
 <style>
 .currentAccount {
-  background: teal;
+  background: lightcoral;
 }
 </style>

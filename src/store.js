@@ -4,6 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // Simple example of using the Vuex package to manage global state.
+// Refer to the complete Vuex documentation: https://vuex.vuejs.org/
 
 // Most of the code in this sample uses the most verbose ways to
 // access and update global state. Refer to the vuex documentation
