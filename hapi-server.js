@@ -5,8 +5,8 @@ const knex = require("knex")({
     host: "localhost", // PostgreSQL server
     user: "tom", // Your user name
     password: "", // Your password
-    database: "cos-243-ui-spa" // Your database name
-  }
+    database: "cos-243-ui-spa", // Your database name
+  },
 });
 
 // Objection
@@ -24,8 +24,8 @@ const server = Hapi.server({
   host: "localhost",
   port: 3000,
   routes: {
-    cors: true
-  }
+    cors: true,
+  },
 });
 
 async function init() {
@@ -36,12 +36,9 @@ async function init() {
   await server.register({
     plugin: require("hapi-pino"),
     options: {
-      prettyPrint: true
-    }
+      prettyPrint: true,
+    },
   });
-
-  // Configure static file service.
-  await server.register(require("@hapi/inert"));
 
   // Configure routes.
   server.route([
@@ -54,12 +51,10 @@ async function init() {
           payload: Joi.object({
             firstName: Joi.string().required(),
             lastName: Joi.string().required(),
-            email: Joi.string()
-              .email()
-              .required(),
-            password: Joi.string().required()
-          })
-        }
+            email: Joi.string().email().required(),
+            password: Joi.string().required(),
+          }),
+        },
       },
       handler: async (request, h) => {
         const existingAccount = await Account.query()
@@ -68,7 +63,7 @@ async function init() {
         if (existingAccount) {
           return {
             ok: false,
-            msge: `Account with email '${request.payload.email}' is already in use`
+            msge: `Account with email '${request.payload.email}' is already in use`,
           };
         }
 
@@ -76,57 +71,57 @@ async function init() {
           first_name: request.payload.firstName,
           last_name: request.payload.lastName,
           email: request.payload.email,
-          password: request.payload.password
+          password: request.payload.password,
         });
 
         if (newAccount) {
           return {
             ok: true,
-            msge: `Created account '${request.payload.email}'`
+            msge: `Created account '${request.payload.email}'`,
           };
         } else {
           return {
             ok: false,
-            msge: `Couldn't create account with email '${request.payload.email}'`
+            msge: `Couldn't create account with email '${request.payload.email}'`,
           };
         }
-      }
+      },
     },
 
     {
       method: "GET",
       path: "/accounts",
       config: {
-        description: "Retrieve all accounts"
+        description: "Retrieve all accounts",
       },
       handler: (request, h) => {
         return Account.query();
-      }
+      },
     },
 
     {
       method: "DELETE",
       path: "/accounts/{id}",
       config: {
-        description: "Delete an account"
+        description: "Delete an account",
       },
       handler: (request, h) => {
         return Account.query()
           .deleteById(request.params.id)
-          .then(rowsDeleted => {
+          .then((rowsDeleted) => {
             if (rowsDeleted === 1) {
               return {
                 ok: true,
-                msge: `Deleted account with ID '${request.params.id}'`
+                msge: `Deleted account with ID '${request.params.id}'`,
               };
             } else {
               return {
                 ok: false,
-                msge: `Couldn't delete account with ID '${request.params.id}'`
+                msge: `Couldn't delete account with ID '${request.params.id}'`,
               };
             }
           });
-      }
+      },
     },
 
     {
@@ -136,14 +131,10 @@ async function init() {
         description: "Log in",
         validate: {
           payload: Joi.object({
-            email: Joi.string()
-              .email()
-              .required(),
-            password: Joi.string()
-              .min(8)
-              .required()
-          })
-        }
+            email: Joi.string().email().required(),
+            password: Joi.string().min(8).required(),
+          }),
+        },
       },
       handler: async (request, h) => {
         const account = await Account.query()
@@ -160,24 +151,24 @@ async function init() {
               id: account.id,
               firstName: account.first_name,
               lastName: account.last_name,
-              email: account.email
-            }
+              email: account.email,
+            },
           };
         } else {
           return {
             ok: false,
-            msge: "Invalid email or password"
+            msge: "Invalid email or password",
           };
         }
-      }
-    }
+      },
+    },
   ]);
 
   // Start the server.
   await server.start();
 }
 
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   server.logger().error(err);
   process.exit(1);
 });
