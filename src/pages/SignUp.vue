@@ -68,9 +68,9 @@ import Instructions from "../components/Instructions.vue";
 export default {
   name: "SignUpPage",
   components: {
-    Instructions // Use the Instructions component we just imported
+    Instructions, // Use the Instructions component we just imported
   },
-  data: function() {
+  data: function () {
     return {
       valid: false, // Are all the fields in the form valid?
 
@@ -79,7 +79,7 @@ export default {
         firstName: "",
         lastName: "",
         email: "",
-        password: ""
+        password: "",
       },
 
       // Was an account created successfully?
@@ -97,22 +97,22 @@ export default {
       // return either true (the field passes that validation) or a string
       // containing an error message indicating why the field doesn't pass validation.
       rules: {
-        required: [val => val.length > 0 || "Required"],
+        required: [(val) => val.length > 0 || "Required"],
         email: [
-          val => /\w{3,}@\w{3,}(?:.\w{3,})+$/.test(val) || "Invalid e-mail"
+          (val) => /\w{3,}@\w{3,}(?:.\w{3,})+$/.test(val) || "Invalid e-mail",
         ],
         password: [
-          val => /[A-Z]/.test(val) || "Need upper case letter",
-          val => /[a-z]/.test(val) || "Need lower case letter",
-          val => /\d/.test(val) || "Need digit",
-          val => val.length >= 8 || "Minimum 8 characters"
-        ]
-      }
+          (val) => /[A-Z]/.test(val) || "Need upper case letter",
+          (val) => /[a-z]/.test(val) || "Need lower case letter",
+          (val) => /\d/.test(val) || "Need digit",
+          (val) => val.length >= 8 || "Minimum 8 characters",
+        ],
+      },
     };
   },
   methods: {
     // Invoked when the user clicks the 'Sign Up' button.
-    handleSubmit: function() {
+    handleSubmit: function () {
       // Haven't been successful yet.
       this.accountCreated = false;
 
@@ -122,9 +122,9 @@ export default {
           firstName: this.newMember.firstName,
           lastName: this.newMember.lastName,
           email: this.newMember.email,
-          password: this.newMember.password
+          password: this.newMember.password,
         })
-        .then(result => {
+        .then((result) => {
           // Based on whether things worked or not, show the
           // appropriate dialog.
           if (result.data.ok) {
@@ -134,11 +134,11 @@ export default {
             this.showDialog("Sorry", result.data.msge);
           }
         })
-        .catch(err => this.showDialog("Failed", err));
+        .catch((err) => this.showDialog("Failed", err));
     },
 
     // Helper method to display the dialog box with the appropriate content.
-    showDialog: function(header, text) {
+    showDialog: function (header, text) {
       this.dialogHeader = header;
       this.dialogText = text;
       this.dialogVisible = true;
@@ -146,13 +146,13 @@ export default {
 
     // Invoked by the "Okay" button on the dialog; dismiss the dialog
     // and navigate to the home page.
-    hideDialog: function() {
+    hideDialog: function () {
       this.dialogVisible = false;
       if (this.accountCreated) {
         // Only navigate away from the sign-up page if we were successful.
         this.$router.push({ name: "home-page" });
       }
-    }
-  }
+    },
+  },
 };
 </script>

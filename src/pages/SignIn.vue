@@ -49,8 +49,8 @@ export default {
 
       snackbar: {
         show: false,
-        msge: ""
-      }
+        msge: "",
+      },
     };
   },
 
@@ -59,22 +59,22 @@ export default {
       this.$axios
         .post("/login", {
           email: this.email,
-          password: this.password
+          password: this.password,
         })
-        .then(result => {
+        .then((result) => {
           this.showSnackbar(result.data.msge);
           if (result.data.ok) {
             this.$store.commit("logIn", result.data.details);
             this.$router.push({ name: "home-page" });
           }
         })
-        .catch(err => this.showSnackbar(err));
+        .catch((err) => this.showSnackbar(err));
     },
 
     showSnackbar(msge) {
       this.snackbar.msge = msge;
       this.snackbar.show = true;
-    }
-  }
+    },
+  },
 };
 </script>
