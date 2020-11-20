@@ -168,10 +168,5 @@ async function init() {
   await server.start();
 }
 
-process.on("unhandledRejection", (err) => {
-  server.logger().error(err);
-  process.exit(1);
-});
-
 // Go!
 init();
